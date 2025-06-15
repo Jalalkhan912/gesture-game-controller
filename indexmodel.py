@@ -31,8 +31,9 @@ class GestureClassifier(nn.Module):
 
 # Initialize and load model weights
 model = GestureClassifier(input_size=10, num_classes=num_classes)
-model.load_state_dict(torch.load("gesture_classifier_model.pth", map_location=torch.device('cpu')))
-model.eval()
+# 🔁 Load the TorchScript model
+optimized_model = torch.jit.load("gesture_classifier_traced.pt")
+optimized_model.eval()
 
 # Setup MediaPipe
 mp_hands = mp.solutions.hands
@@ -79,14 +80,14 @@ while True:
         # Convert to tensor
         input_tensor = torch.tensor(keypoints_scaled, dtype=torch.float32)
         with torch.no_grad():
-            output = model(input_tensor)
+            output = optimized_model(input_tensor)
             predicted_class = torch.argmax(output, dim=1).item()
             gesture = classes[predicted_class]
 
         # Trigger key press
         if gesture in gesture_to_key:
             pyautogui.press(gesture_to_key[gesture])
-            time.sleep(0.2)
+            time.sleep(0.1)
 
 cap.release()
 cv2.destroyAllWindows()
