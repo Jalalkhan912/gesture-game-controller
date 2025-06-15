@@ -62,11 +62,17 @@ player_pos = [320, 240]
 player_size = 40
 
 # Start camera
-cap = cv2.VideoCapture(0)
 print("[Game] Use hand gestures to move the square!")
 
 gesture_cooldown = 0.1
 last_gesture_time = time.time()
+cap = cv2.VideoCapture(0)
+
+# Set low resolution for speed
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+
+print("Camera resolution:", cap.get(cv2.CAP_PROP_FRAME_WIDTH), "x", cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 while True:
     ret, frame = cap.read()
