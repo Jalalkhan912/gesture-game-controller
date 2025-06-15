@@ -30,7 +30,7 @@ class GestureClassifier(nn.Module):
         return self.model(x)
 
 # Initialize and load model weights
-model = GestureClassifier(input_size=10, num_classes=num_classes)
+optimized_model = GestureClassifier(input_size=10, num_classes=num_classes)
 # 🔁 Load the TorchScript model
 optimized_model = torch.jit.load("gesture_classifier_traced.pt")
 optimized_model.eval()
